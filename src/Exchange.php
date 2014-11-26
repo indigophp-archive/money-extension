@@ -61,7 +61,7 @@ class Exchange
      */
     public function getCurrencyPair(Currency $baseCurrency, Currency $counterCurrency)
     {
-        $rate = 1;
+        $rate = 1.0;
 
         if (!$baseCurrency->equals($counterCurrency)) {
             $rate = $this->provider->getRate($baseCurrency, $counterCurrency);

@@ -68,7 +68,9 @@ class Batch implements Provider
         foreach ($this->providers as $provider) {
             try {
                 $rate = $provider->getRate($baseCurrency, $counterCurrency);
-            } catch (UnsupportedCurrency $e) { }
+            } catch (UnsupportedCurrency $e) {
+                // move to the next provider if available
+            }
         }
 
         if (!isset($rate)) {

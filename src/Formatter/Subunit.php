@@ -36,13 +36,15 @@ class Subunit implements Formatter
     private $subunit;
 
     /**
-     * @var ReflectionProperty
+     * @var \ReflectionProperty
      */
     private $reflectionProperty;
 
     /**
      * @param Formatter $formatter
      * @param integer   $subunit
+     *
+     * @throws \InvalidArgumentException If subunit is invalid
      */
     public function __construct(Formatter $formatter, $subunit)
     {
