@@ -32,6 +32,8 @@ The extensions are kept in the same namespace as the extended library (either Mo
 
 ### Exchange
 
+You can use this extension to create `CurrencyPair`s with conversion rate from a third party source.
+
 ``` php
 use Money\Exchange;
 use Money\Provider\Local;
@@ -48,7 +50,7 @@ $currencyPair = $exchange->getCurrencyPair($baseCurrency, $counterCurrency);
 $currencyPair->getConversionRate();
 ```
 
-You can use this extension to create `CurrencyPair`s with conversion rate from a third party source. Currently (WIP) the following `Provider`s are availaible:
+Currently (WIP) the following `Provider`s are availaible:
 
 - Local (array)
 - Batch
