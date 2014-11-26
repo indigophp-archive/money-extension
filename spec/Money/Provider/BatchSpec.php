@@ -30,14 +30,52 @@ class BatchSpec extends ObjectBehavior
         $baseCurrency = new Currency('EUR');
         $counterCurrency = new Currency('USD');
 
-        $exception = new UnsupportedCurrency($baseCurrency);
+        $e = new UnsupportedCurrency($baseCurrency);
 
-        $provider1->getRate($baseCurrency, $counterCurrency)->willThrow($exception);
+        $provider1->getRate($baseCurrency, $counterCurrency)->willThrow($e);
         $provider2->getRate($baseCurrency, $counterCurrency)->willReturn($rate);
 
         $this->addProvider($provider1);
         $this->addProvider($provider2);
 
         $this->getRate($baseCurrency, $counterCurrency)->shouldReturn($rate);
+    }
+
+    function it_should_throw_an_exception_when_called_without_providers()
+    {
+        $baseCurrency = new Currency('EUR');
+        $counterCurrency = new Currency('USD');
+
+        $this->shouldThrow('RuntimeException')->duringGetRate($baseCurrency, $counterCurrency);
+    }
+
+    function it_should_throw_an_exception_when_all_provider_fails(Provider $provider1, Provider $provider2)
+    {
+        $rate = 1.25;
+        $baseCurrency = new Currency('EUR');
+        $counterCurrency = new Currency('USD');
+
+        $e = new UnsupportedCurrency($baseCurrency);
+
+        $provider1->getRate($baseCurrency, $counterCurrency)->willThrow($e);
+        $provider2->getRate($baseCurrency, $counterCurrency)->willThrow($e);
+
+        $this->addProvider($provider1);
+        $this->addProvider($provider2);
+
+        $this->shouldThrow($e)->duringGetRate($baseCurrency, $counterCurrency);
+    }
+
+    function it_should_throw_an_exception_when_rate_cannot_be_determined(Provider $provider)
+    {
+        $rate = 1.25;
+        $baseCurrency = new Currency('EUR');
+        $counterCurrency = new Currency('USD');
+
+        $provider->getRate($baseCurrency, $counterCurrency)->willReturn(null);
+
+        $this->addProvider($provider);
+
+        $this->shouldThrow('RuntimeException')->duringGetRate($baseCurrency, $counterCurrency);
     }
 }
