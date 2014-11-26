@@ -19,32 +19,36 @@ namespace Money;
 class Exchange
 {
     /**
-     * @var Provider[]
+     * @var Provider
      */
-    private $providers = [];
+    private $provider;
 
     /**
-     * Adds a Provider to the stack
-     *
      * @param Provider $provider
      */
-    public function addProvider(Provider $provider)
+    public function __construct(Provider $provider)
     {
-        if (!$this->hasProvider($provider)) {
-            $this->providers[] = $provider;
-        }
+        $this->provider = $provider;
     }
 
     /**
-     * Checks if the Provider exists in the stack
+     * Returns the Provider
+     *
+     * @return Provider
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * Sets the Provider
      *
      * @param Provider $provider
-     *
-     * @return boolean
      */
-    public function hasProvider(Provider $provider)
+    public function setProvider(Provider $provider)
     {
-        return in_array($provider, $this->providers, true);
+        $this->provider = $provider;
     }
 
     /**
@@ -60,33 +64,9 @@ class Exchange
         $rate = 1;
 
         if (!$baseCurrency->equals($counterCurrency)) {
-            $rate = $this->getRate($baseCurrency, $counterCurrency);
+            $rate = $this->provider->getRate($baseCurrency, $counterCurrency);
         }
 
         return new CurrencyPair($baseCurrency, $counterCurrency, $rate);
-    }
-
-    /**
-     * Returns the rate
-     *
-     * @param Currency $baseCurrency
-     * @param Currency $counterCurrency
-     *
-     * @return numeric
-     */
-    private function getRate(Currency $baseCurrency, Currency $counterCurrency)
-    {
-        foreach ($this->providers as $provider) {
-            try {
-                $rate = $provider->getRate($baseCurrency, $counterCurrency);
-            } catch (Exception\UnsupportedCurrency $e) { }
-        }
-
-        if (!isset($rate)) {
-            // we don't have a rate
-            // either because no provider added or no provider supported one of the currencies
-        }
-
-        return $rate;
     }
 }
