@@ -1,0 +1,8 @@
+suites:
+  money_suite:
+    namespace: Money
+    psr4_prefix: Money
+  ruler_suite:
+    namespace: Indigo\Ruler
+    psr4_prefix: Indigo\Ruler
+formatter.name: pretty
